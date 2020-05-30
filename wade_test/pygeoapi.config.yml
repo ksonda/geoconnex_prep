@@ -75,7 +75,7 @@ resources:
             name: GeoJSON
             data: /ext_data/ca.geojson
             id_field: id
-     COA:
+    CO:
         type: collection
         title: CO WaDE Sites
         description: CO Sites in WaDE
@@ -104,7 +104,7 @@ resources:
             data: /ext_data/co.geojson
             id_field: id
             
-      ID:
+     ID:
         type: collection
         title: ID WaDE Sites
         description: ID Sites in WaDE
@@ -132,7 +132,7 @@ resources:
             name: GeoJSON
             data: /ext_data/id.geojson
             id_field: id
-       ND:
+     ND:
         type: collection
         title: ND WaDE Sites
         description: ND Sites in WaDE
@@ -161,7 +161,7 @@ resources:
             data: /ext_data/nd.geojson
             id_field: id
 
-       NM:
+     NM:
         type: collection
         title: NM WaDE Sites
         description: NM Sites in WaDE
@@ -219,7 +219,7 @@ resources:
             data: /ext_data/ok.geojson
             id_field: id
 
-      OR:
+     OR:
         type: collection
         title: OR WaDE Sites
         description: OR Sites in WaDE
@@ -248,7 +248,7 @@ resources:
             data: /ext_data/or.geojson
             id_field: id
 
-      OK:
+     OK:
         type: collection
         title: OK WaDE Sites
         description: OK Sites in WaDE
@@ -277,7 +277,7 @@ resources:
             data: /ext_data/ok.geojson
             id_field: id
 
-      UT:
+     UT:
         type: collection
         title: UT WaDE Sites
         description: UT Sites in WaDE
@@ -334,6 +334,3 @@ resources:
             name: GeoJSON
             data: /ext_data/wa.geojson
             id_field: id
-
-
-
