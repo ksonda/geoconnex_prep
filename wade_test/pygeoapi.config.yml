@@ -102,9 +102,8 @@ resources:
         provider:
             name: GeoJSON
             data: /ext_data/co.geojson
-            id_field: id
-            
-     ID:
+            id_field: id      
+     id:
         type: collection
         title: ID WaDE Sites
         description: ID Sites in WaDE
@@ -132,7 +131,7 @@ resources:
             name: GeoJSON
             data: /ext_data/id.geojson
             id_field: id
-     ND:
+     nd:
         type: collection
         title: ND WaDE Sites
         description: ND Sites in WaDE
@@ -160,8 +159,7 @@ resources:
             name: GeoJSON
             data: /ext_data/nd.geojson
             id_field: id
-
-     NM:
+     nm:
         type: collection
         title: NM WaDE Sites
         description: NM Sites in WaDE
@@ -189,8 +187,7 @@ resources:
             name: GeoJSON
             data: /ext_data/nm.geojson
             id_field: id
- 
-     OK:
+     ok:
         type: collection
         title: OK WaDE Sites
         description: OK Sites in WaDE
@@ -218,8 +215,7 @@ resources:
             name: GeoJSON
             data: /ext_data/ok.geojson
             id_field: id
-
-     OR:
+     or:
         type: collection
         title: OR WaDE Sites
         description: OR Sites in WaDE
@@ -247,8 +243,7 @@ resources:
             name: GeoJSON
             data: /ext_data/or.geojson
             id_field: id
-
-     OK:
+     ok:
         type: collection
         title: OK WaDE Sites
         description: OK Sites in WaDE
@@ -276,8 +271,7 @@ resources:
             name: GeoJSON
             data: /ext_data/ok.geojson
             id_field: id
-
-     UT:
+     ut:
         type: collection
         title: UT WaDE Sites
         description: UT Sites in WaDE
@@ -304,9 +298,8 @@ resources:
         provider:
             name: GeoJSON
             data: /ext_data/ut.geojson
-            id_field: id
-            
-     WA:
+            id_field: id           
+     wa:
         type: collection
         title: WA WaDE Sites
         description: WA Sites in WaDE
