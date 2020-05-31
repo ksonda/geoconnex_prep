@@ -131,7 +131,7 @@ resources:
            name: GeoJSON
            data: /ext_data/co.geojson
            id_field: id
-    idaho:
+    id:
        type: collection
        title: ID WaDE Sites
        description: ID Sites in WaDE
