@@ -159,7 +159,7 @@ resources:
            name: GeoJSON
            data: /ext_data/id.geojson
            id_field: id
-      nm:
+    nm:
        type: collection
        title: NM WaDE Sites
        description: NM Sites in WaDE
