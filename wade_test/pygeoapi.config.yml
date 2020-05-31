@@ -47,7 +47,7 @@ metadata:
         role: pointOfContact
 
 resources:
-    az:
+    AZ:
        type: collection
        title: AZ WaDE Sites
        description: AZ Sites in WaDE
@@ -75,7 +75,7 @@ resources:
            name: GeoJSON
            data: /ext_data/az.geojson
            id_field: id
-    ca:
+    CA:
        type: collection
        title: CA WaDE Sites
        description: CA Sites in WaDE
@@ -103,7 +103,7 @@ resources:
            name: GeoJSON
            data: /ext_data/ca.geojson
            id_field: id
-    co:
+    CO:
        type: collection
        title: CO WaDE Sites
        description: CO Sites in WaDE
@@ -131,7 +131,7 @@ resources:
            name: GeoJSON
            data: /ext_data/co.geojson
            id_field: id
-    id:
+    ID:
        type: collection
        title: ID WaDE Sites
        description: ID Sites in WaDE
@@ -159,7 +159,7 @@ resources:
            name: GeoJSON
            data: /ext_data/id.geojson
            id_field: id
-    nd:
+    ND:
        type: collection
        title: ND WaDE Sites
        description: ND Sites in WaDE
@@ -187,7 +187,7 @@ resources:
            name: GeoJSON
            data: /ext_data/nd.geojson
            id_field: id
-    nm:
+    NM:
        type: collection
        title: NM WaDE Sites
        description: NM Sites in WaDE
@@ -215,7 +215,7 @@ resources:
            name: GeoJSON
            data: /ext_data/nm.geojson
            id_field: id
-    ok:
+    OK:
        type: collection
        title: OK WaDE Sites
        description: OK Sites in WaDE
@@ -243,7 +243,7 @@ resources:
            name: GeoJSON
            data: /ext_data/ok.geojson
            id_field: id
-    or:
+    OR:
        type: collection
        title: OR WaDE Sites
        description: OR Sites in WaDE
@@ -271,7 +271,7 @@ resources:
            name: GeoJSON
            data: /ext_data/or.geojson
            id_field: id
-    ut:
+    UT:
        type: collection
        title: UT WaDE Sites
        description: UT Sites in WaDE
@@ -299,7 +299,7 @@ resources:
            name: GeoJSON
            data: /ext_data/ut.geojson
            id_field: id
-    wa:
+    WA:
        type: collection
        title: WA WaDE Sites
        description: WA Sites in WaDE
