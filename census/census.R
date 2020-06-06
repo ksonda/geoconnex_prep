@@ -13,7 +13,7 @@ library(utils)
 library(tidyverse)
 
 #functions
-get_census <- function()
+#get_census <- function()
 
 # Download files
 
@@ -22,20 +22,25 @@ get_census <- function()
 #### base urls
 base<-"https://www2.census.gov/geo/tiger/GENZ2019/shp/"
 pid_base<-"https://geoconnex.us/ref/"
+landing_base<-"https://info.geoconnex.us/collections/"
+creator<-"kyle.onda@duke.edu"
 
-region<-c("region","cb_2019_us_region_500k")
-division<-c("division","cb_2019_us_division_500k")
-state<-c("state","cb_2019_us_state_500k")
-county<-c("county", "cb_2019_us_county_500k")
-aiannh<-c("aiannh","cb_2019_us_aiannh_500k")
-cbsa<-c("cbsa","cb_2019_us_cbsa_500k")
-ua10<-c("ua10","cb_2019_us_ua10_500k")
+#region<-c("region","cb_2019_us_region_500k","GEOID")
+#division<-c("division","cb_2019_us_division_500k","GEOID")
+states<-c("states","cb_2019_us_state_500k","GEOID")
+counties<-c("counties", "cb_2019_us_county_500k","GEOID")
+aiannh<-c("aiannh","cb_2019_us_aiannh_500k","GEOID")
+cbsa<-c("cbsa","cb_2019_us_cbsa_500k","GEOID")
+ua10<-c("ua10","cb_2019_us_ua10_500k","GEOID10")
+places<-c("places","cb_2019_us_place_500k","GEOID")
 
-list<-list(region,division,state,county,aiannh,cbsa,ua10)
+list<-list(states,counties,aiannh,cbsa,ua10,places)
 
 
 # regions 
 for (i in list){
+  
+  # download, extract, read boundary files, delete shapefiles
   temp <- tempfile()
   exdir=paste0(getwd(),"/",i[1])
   download.file(url=paste0(base,i[2],".zip"),temp)
@@ -43,5 +48,30 @@ for (i in list){
   file <- st_read(dsn=paste0(exdir,"/",i[2],".shp"),stringsAsFactors = FALSE)
   list.files(exdir)
   sapply(paste0(exdir,"/",list.files(exdir)),unlink)
+  
+  # assign PIDs and write SQLiteGeoPackage files
+  file$uri<-paste0(pid_base,i[1],"/",file[[i[3]]])
+  file$ALAND<-NULL
+  file$AWATER<-NULL
+  if (i[1] %in% c("states", "counties", "places")){
+    file$census_profile<-paste0("https://data.census.gov/cedsci/profile?g=",file$AFFGEOID)
+  }
   st_write(file,dsn=paste0(getwd(),"/",i[1],"/",i[1],".gpkg"))
+  
+  # write csv
+  data<-as.data.frame(file[c("uri")])
+  data <- data%>%mutate(
+    geometry = NULL,
+    id = uri,
+    uri = NULL,
+    target = paste0(landing_base,i[1],"/items/",file[[i[3]]]),
+    creator = creator,
+    c1_type = "QueryString",
+    c1_match = "f?=.*",
+    c1_value = paste0(target,"?f=${C:f:1}")
+  )
+  
+  write.csv(data,file=paste0(i[1],"/",i[1],".csv"))
+
+  #data$target<-paste0(landing_base,i[1],file)
 }
