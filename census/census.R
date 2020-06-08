@@ -11,6 +11,7 @@
 library(sf)
 library(utils)
 library(tidyverse)
+library(pidsvcBackup)
 
 #functions
 #get_census <- function()
@@ -36,8 +37,8 @@ places<-c("places","cb_2019_us_place_500k","GEOID")
 
 list<-list(states,counties,aiannh,cbsa,ua10,places)
 
+batch_size=2000
 
-# regions 
 for (i in list){
   
   # download, extract, read boundary files, delete shapefiles
@@ -66,12 +67,32 @@ for (i in list){
     uri = NULL,
     target = paste0(landing_base,i[1],"/items/",file[[i[3]]]),
     creator = creator,
+    description = paste0("Census ",i[1]," reference geographies"),
     c1_type = "QueryString",
     c1_match = "f?=.*",
-    c1_value = paste0(target,"?f=${C:f:1}")
+    c1_value = paste0(target,"?f=${C:f:1}"),
+    grp = floor((row_number()-1)/batch_size)
   )
   
-  write.csv(data,file=paste0(i[1],"/",i[1],".csv"))
+  
+  
+  data_split <- split(data, list(data$grp))
+  data$grp<-NULL
+  write_csv(data,path=paste0(i[1],"/",i[1],".csv"))
+  
+  for (grp in names(data_split)){
+    
+    d2<-data_split[[grp]]
+    d2$grp<-NULL 
+    write_csv(d2,path="temp.csv")
+    write_xml(in_f="temp.csv", out_f="temp.xml", root="https://geoconnex.us")
+    post_pids(in_f="temp.xml", user="iow", password="nieps", root="https://geoconnex.us")
+    unlink("temp.csv")
+    unlink("temp.xml")
+  }
 
   #data$target<-paste0(landing_base,i[1],file)
 }
+
+
+
