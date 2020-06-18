@@ -70,7 +70,7 @@ for (i in list){
   #   creator = creator,
   #   description = paste0("Census ",i[1]," reference geographies"),
   #   c1_type = "QueryString",
-  #   c1_match = "f?=.*",
+  #   c1_match = "f=.*",
   #   c1_value = paste0(target,"?f=${C:f:1}"),
   #   grp = floor((row_number()-1)/batch_size)
   # )
