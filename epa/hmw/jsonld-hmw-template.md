@@ -72,7 +72,7 @@ The following 2 changes would be sufficient in the short term:
 
 Walking through the block:
 
-0. Needs to be within <script></script> tag for web crawlers to read
+0. Needs to be within <script type="application/ld+json"></script> tag for web crawlers to read
 1. The ``` "@context" ``` array imports and controlled vocabulary terms necessary for web crawlers to properly catelog the rest of the structured data.
 2. ```"@id"``` identifies the resource (ideally with a PID) as a node in a wider graph of linked data, which the following structured data describes.
 3. ```"@type``` identifies the type of resource. We are still figuring this out, as we need to distinguish between real-world features of various kinds, web pages about those features (what HMW is), and actual data sources (also of various kinds).
