@@ -49,7 +49,7 @@ The actual HMW pages currently generate this HTML <head><\head> block:
 
 The following 2 changes would be sufficient in the short term:
 
-1. Change the line ```<link rel="canonical" href=""/>``` to include the PID (e.g. ```<link rel="canonical" href="https://geoconnex.us/epa/hmw/020700110204"/>```). This ensures that when search engines crawl the geoconnex PIDs, it indexes the pages they redirect to.
+1. Change the line ```<link rel="canonical" href=""/>``` to include the PID (e.g. ```<link rel="canonical" href="https://geoconnex.us/epa/hmw/020700110204"/>```). This ensures that when search engines crawl the geoconnex PIDs, they indexes the page they redirect to.
 
 2. Insert the following <script></script> block within this head block (modified as appropriate for each HUC12/ pid). This will help improve search indexes return structured/ highlighted content to users. This is a minimal block that can be built on further as we figure out some more best practices. Eventually, we hope to build an "internet of water" crawler that will be able to crawl all the pages with geoconnex PIDs, and infer and store relationships between web resources like HMW and persistently identified features in a search index. We can then use this index to create a more generalized metadata catalog or other discovery tool with all kinds of semantic and hydrologic search parameters. 
 
@@ -73,9 +73,9 @@ The following 2 changes would be sufficient in the short term:
 Walking through the block:
 
 0. Needs to be within <script type="application/ld+json"></script> tag for web crawlers to read
-1. The ``` "@context" ``` array imports and controlled vocabulary terms necessary for web crawlers to properly catelog the rest of the structured data.
+1. The ``` "@context" ``` array imports any controlled vocabulary namespaces and/or terms necessary for web crawlers to properly interpret the rest of the structured data.
 2. ```"@id"``` identifies the resource (ideally with a PID) as a node in a wider graph of linked data, which the following structured data describes.
 3. ```"@type``` identifies the type of resource. We are still figuring this out, as we need to distinguish between real-world features of various kinds, web pages about those features (what HMW is), and actual data sources (also of various kinds).
-4. ```"name"``` provides a human-readable name. Search ind
-5. ```"provider"``` provides an identifier of the provider of the resource. Eventually probably a key semantic search parameter in a dsicovery tool.
+4. ```"name"``` provides a human-readable name. 
+5. ```"provider"```  identifies of the provider of the resource. Eventually probably a key semantic search parameter in a discovery tool.
 6. ```"about"``` is KEY, and provides the identifier for real-world feature the resource is "about". This is a key linking property that will be used to build, infer, and display linkages between web resources and data sources that describe the same/realted real-world objects. In this case, the reference HUC12.
