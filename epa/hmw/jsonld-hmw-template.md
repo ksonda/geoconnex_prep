@@ -51,7 +51,7 @@ The following 2 changes would be sufficient in the short term:
 
 1. Change the line ```<link rel="canonical" href=""/>``` to include the PID (e.g. ```<link rel="canonical" href="https://geoconnex.us/epa/hmw/020700110204"/>```). This ensures that when search engines crawl the geoconnex PIDs, it indexes the pages they redirect to.
 
-2. Insert the following <script></script> block within this head block (modified as appropriate for each HUC12/ pid). This will help improve search indexes return structured/ highlighted content to users. For geoconnex purposes, the key is to include ```"@id": "<pid>"``` and ```"about:" "<nhdplusv2 pid>"```. Eventually, we wll get around to building an "internet of water" crawler that will be able to crawl all the pages with geoconnex PIDs, and infer and store relationships between web resources like HMW and persistently identified features in a search index. We can then use this index to create a more generalized discovery tool with all kinds of semantic and hydrological search parameters. 
+2. Insert the following <script></script> block within this head block (modified as appropriate for each HUC12/ pid). This will help improve search indexes return structured/ highlighted content to users. For geoconnex purposes, the key is to include ```"@id": "<pid>"``` and ```"about:" "<nhdplusv2 pid>"```. Eventually, we hope to build an "internet of water" crawler that will be able to crawl all the pages with geoconnex PIDs, and infer and store relationships between web resources like HMW and persistently identified features in a search index. We can then use this index to create a more generalized discovery tool with all kinds of semantic and hydrologic search parameters. 
 
 ```
 <script type="application/ld+json">
@@ -62,6 +62,7 @@ The following 2 changes would be sufficient in the short term:
  "@id": "https://geoconnex.us/epa/hmw/020700110204",
  "@type": "WebPage,
  "name": "Accokeek Creek (020700110204)",
+ "provider": "https://epa.gov",
  "description": "EPA How's My Waterway Community as Twelve-Digit Hydrologic Unit",
  "about": "https://geoconnex.us/nhdplusv2/huc12/020700110204"
 }
