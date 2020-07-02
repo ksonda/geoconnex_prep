@@ -60,7 +60,7 @@ The following 2 changes would be sufficient in the short term:
   "https://schema.org"
  ],
  "@id": "https://geoconnex.us/epa/hmw/020700110204",
- "@type": "WebPage,
+ "@type": "WebPage",
  "name": "Accokeek Creek (020700110204)",
  "provider": "https://epa.gov",
  "description": "EPA How's My Waterway Community as Twelve-Digit Hydrologic Unit",
