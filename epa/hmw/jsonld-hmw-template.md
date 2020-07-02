@@ -49,9 +49,9 @@ The actual HMW pages currently generate this HTML <head><\head> block:
 
 The following 2 changes would be sufficient in the short term:
 
-1. Change the line ```<link rel="canonical" href=""/>``` to include the PID (e.g. ```<link rel="canonical" href="https://geoconnex.us/epa/hmw/020700110204"/>```). This ensures that when search engines crawl the geoconnex PIDs, they indexes the page they redirect to.
+1. Change the line ```<link rel="canonical" href=""/>``` to include the PID (e.g. ```<link rel="canonical" href="https://geoconnex.us/epa/hmw/020700110204"/>```). This ensures that when search engines crawl the geoconnex PID, they index the page they redirect to.
 
-2. Insert the following <script></script> block within this head block (modified as appropriate for each HUC12/ pid). This will help improve search indexes return structured/ highlighted content to users. This is a minimal block that can be built on further as we figure out some more best practices. Eventually, we hope to build an "internet of water" crawler that will be able to crawl all the pages with geoconnex PIDs, and infer and store relationships between web resources like HMW and persistently identified features in a search index. We can then use this index to create a more generalized metadata catalog or other discovery tool with all kinds of semantic and hydrologic search parameters. 
+2. Insert the following <script></script> block within this head block (modified as appropriate for each HUC12/ pid). This will help improve search results, and help search engines return structured/ highlighted content to users. This is a minimal block that can be built on further as we figure out some more best practices. Eventually, we hope to build an "internet of water" crawler that will be able to crawl all the pages with geoconnex PIDs, and infer and store relationships between web resources like HMW and persistently identified features in a search index. We can then use this index to create a more generalized metadata catalog or other discovery tool with all kinds of semantic and hydrologic search parameters. 
 
 ```
 <script type="application/ld+json">
@@ -78,4 +78,5 @@ Walking through the block:
 3. ```"@type``` identifies the type of resource. We are still figuring this out, as we need to distinguish between real-world features of various kinds, web pages about those features (what HMW is), and actual data sources (also of various kinds).
 4. ```"name"``` provides a human-readable name. 
 5. ```"provider"```  identifies of the provider of the resource. Eventually probably a key semantic search parameter in a discovery tool.
-6. ```"about"``` is KEY, and provides the identifier for real-world feature the resource is "about". This is a key linking property that will be used to build, infer, and display linkages between web resources and data sources that describe the same/realted real-world objects. In this case, the reference HUC12.
+6. ```"description"``` helpful human-readable description
+7. ```"about"``` is KEY, and provides the identifier for the real-world feature the resource is "about". This is a key linking property that will be used to build, infer, and display linkages between web resources and data sources that describe the same/related real-world resources. In this case, the reference HUC12.
