@@ -6,3 +6,4 @@ census/temp.csv
 census/temp.xml
 census/temp.csv
 pws/.Rproj.user
+pws/data/NC_PWS_2019.geojson
