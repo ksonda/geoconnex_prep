@@ -2,3 +2,5 @@ THe purpose of this project is to genereate PIDs/redirects for a reference set o
 
 
 These boundaries are processed into .gpkg for hosting on info.geoconnex.us, and are available at https://www.hydroshare.org/resource/4a22e88e689949afa1cf71ae009eaf1b/
+
+Table of state PWS sources in [state_sources.csv](state_sources.csv)
