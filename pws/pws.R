@@ -135,7 +135,7 @@ nm <- nm %>% filter(st_geometry_type(.) %in% c("POLYGON","MULTIPOLYGON"))
 nm <- st_transform(nm, 4326)
 nm$PWSID <- nm$Water_System_ID
 nm$NAME <- nm$PublicSystemName
-nm$PROVIDER = "https://catalog.newmexicowaterdata.org/ne/dataset/public-water-supply-areas"
+nm$PROVIDER = "https://catalog.newmexicowaterdata.org/en/dataset/public-water-supply-areas"
 nm$url=""
 nm$ST="NM"
 nm <- pws_sf_strip(nm)
@@ -281,7 +281,7 @@ PWS$uri <- paste0(root,PWS$PWSID)
 st_write(PWS2,dsn="out/pws.gpkg")
 
 pws <- st_read("out/pws.gpkg")
-pws$PROVIDER[which(pws$ST=="NM" & pws$BOUNDARY_TYPE=="Water Service Area - As specified in PROVIDER ")] <- "https://catalog.newmexicowaterdata.org/ne/dataset/public-water-supply-areas"
+pws$PROVIDER[which(pws$ST=="NM" & pws$BOUNDARY_TYPE=="Water Service Area - As specified in PROVIDER ")] <- "https://catalog.newmexicowaterdata.org/en/dataset/public-water-supply-areas"
 write_csv(pids,"out/pws.csv")
 st_write(pws,dsn="out/pws.gpkg")
 
