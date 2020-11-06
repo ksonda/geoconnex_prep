@@ -104,8 +104,45 @@ tx$ST="TX"
 tx<-pws_sf_strip(tx)
 
 nc2<-st_read("nc.geojson")
-boundaries<-rbind(ca,nc2,nj,pa,tx)
 
+##UT
+#download.file("https://opendata.arcgis.com/datasets/dc62a286013f447e88fc45480077c944_0.zip", "data/ut.zip")
+#unzip("data/ut.zip",exdir="data/ut_shp")
+ut <- st_read("data/ut_shp/CulinaryWaterServiceAreas.shp")
+ut <- st_transform(ut, 4326)
+ut$PWSID = ut$DWSYSNUM
+ut$NAME = ut$WRNAME
+ut$PROVIDER = "https://dwre-utahdnr.opendata.arcgis.com/datasets/culinarywaterserviceareas"
+ut$url=paste0("https://waterrights.utah.gov/cgi-bin/wuseview.exe?Modinfo=Pwsview&SYSTEM_ID=",ut$WRID)
+ut$ST="UT"
+ut<-pws_sf_strip(ut)
+
+##AZ
+#download.file("https://opendata.arcgis.com/datasets/a27a81894e6b4897a33daf2003bc58b9_0.zip","data/az.zip")
+#unzip("data/az.zip",exdir="data/az_shp")
+az <- st_read("data/az_shp/CWS_ServiceArea.shp")
+az <- st_transform(az, 4326)
+az$PWSID <- az$ADEQ_ID
+az$NAME <- az$CWS_NAME
+az$PROVIDER = "https://gisdata2016-11-18t150447874z-azwater.opendata.arcgis.com/datasets/cws-servicearea"
+az$url=""
+az$ST="AZ"
+az <- pws_sf_strip(az)
+
+##NM
+nm <- st_read("https://catalog.newmexicowaterdata.org/dataset/5d069bbb-1bfe-4c83-bbf7-3582a42fce6e/resource/ccb9f5ce-aed4-4896-a2f1-aba39953e7bb/download/pws_nm.geojson")
+nm <- nm %>% filter(st_geometry_type(.) %in% c("POLYGON","MULTIPOLYGON"))
+nm <- st_transform(nm, 4326)
+nm$PWSID <- nm$Water_System_ID
+nm$NAME <- nm$PublicSystemName
+nm$PROVIDER = "https://gisdata2016-11-18t150447874z-nmwater.opendata.arcgis.com/datasets/cws-servicearea"
+nm$url=""
+nm$ST="NM"
+nm <- pws_sf_strip(nm)
+
+
+
+boundaries<-rbind(ca,nc2,nj,pa,tx,ut,az,nm)
 ## Assign state polygon if no boundary
 d$SOURCE_WATER[which(d$SOURCE_WATER=="GW")]<-"Ground water"
 d$SOURCE_WATER[which(d$SOURCE_WATER=="SW")]<-"Surface water"
@@ -176,13 +213,18 @@ st_write(pl,dsn="data/pl.gpkg")
 pl<-st_read("data/pl.gpkg")
 
 pl$CITY_SERVED = toupper(pl$CITY_SERVED)
-pl$CITY_SERVED_uri = pl$pl_uri
+pl$CITY_SERVED_uri = pl$uri
 pl$pl_uri<-NULL
 
 pl2<-st_drop_geometry(pl)
 
 pws_boundaries <- left_join(pws_boundaries,pl2,by=c("CITY_SERVED","ST_uri"))
 pws_placeboundaries <- inner_join(pl,pws_noboundaries,by=c("CITY_SERVED","ST_uri"))
+
+pws_placeboundaries$uri <- pws_placeboundaries$uri.y
+pws_placeboundaries$uri.x <- NULL
+pws_placeboundaries$uri.y <- NULL
+
 pws_noboundaries2 <- anti_join(pws_noboundaries,pws_placeboundaries,by=c("CITY_SERVED","ST_uri"))
 pws_noboundaries2 <- left_join(states,pws_noboundaries2,by="ST_uri")
 pws_noboundaries2$CITY_SERVED_uri <- NA
@@ -198,8 +240,15 @@ pws_noboundaries2$BOUNDARY_TYPE <- "Unknown Service Area - Centroid of State U.S
 st_write(pws_placeboundaries,dsn="data/pws_placeboundaries.gpkg")
 
 pwpb<-st_read("data/pws_placeboundaries.gpkg")
-names(pwpb)<-names(pws_boundaries)
+#names(pwpb)<-names(pws_boundaries)
 st_geometry(pwpb)<-"geometry"
+
+pws_boundaries$uri <- paste0("https://geoconnex.us/ref/pws/",pws_boundaries$PWSID)
+pws_boundaries$uri.x <- NULL
+pws_boundaries$uri.y <- NULL
+
+
+
 
 PWS2<-rbind(pws_boundaries,pwpb,pws_noboundaries2)
 #st_write(PWS2,dsn="out/pws.gpkg")
@@ -251,5 +300,26 @@ batch_size=1000
     unlink("temp.xml")
   }
   
-
-
+  
+  bounds <- st_read("out/pws.gpkg")
+  pids<-read_csv("out/pws.csv")
+  missing_pids <- anti_join(bounds,pids,by=c("uri"="id"))
+  
+ missing_pids<-missing_pids%>%mutate(id=uri,
+                                     target=paste0("https://info.geoconnex.us/collections/pws/items/",
+                                                   PWSID),
+                                     creator="kyle.onda@duke.edu",
+                                     description="Public Water Systems",
+                                     c1_type="QueryString",
+                                     c1_match="f=.*",
+                                     c1_value=paste0(target,"?f=${C:f:1}"))%>%
+   select(id,target,creator,description,c1_type,c1_match,c1_value)
+ 
+ write_csv(missing_pids,path="temp.csv")
+ write_xml(in_f="temp.csv", out_f="temp.xml", root="https://geoconnex.us")
+ post_pids(in_f="temp.xml", user="iow", password="nieps", root="https://geoconnex.us")
+ unlink("temp.csv")
+ unlink("temp.xml")
+ missing_pids$geom<-NULL
+ 
+ pws <- bind_rows(pids,missing_pids)

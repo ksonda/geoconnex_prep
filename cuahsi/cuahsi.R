@@ -17,7 +17,7 @@ batch_size=2000
 
 ####   ####
 
-list<-list.files(path="his",full.names = TRUE)
+list<-list.files(path="his",full.names = TRUE,pattern="*.csv",recursive=TRUE)
 
 for (i in list){
   file <- read_csv(i) %>% mutate(batch = floor((row_number()-1)/batch_size))
