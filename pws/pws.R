@@ -135,7 +135,7 @@ nm <- nm %>% filter(st_geometry_type(.) %in% c("POLYGON","MULTIPOLYGON"))
 nm <- st_transform(nm, 4326)
 nm$PWSID <- nm$Water_System_ID
 nm$NAME <- nm$PublicSystemName
-nm$PROVIDER = "https://gisdata2016-11-18t150447874z-nmwater.opendata.arcgis.com/datasets/cws-servicearea"
+nm$PROVIDER = "https://catalog.newmexicowaterdata.org/ne/dataset/public-water-supply-areas"
 nm$url=""
 nm$ST="NM"
 nm <- pws_sf_strip(nm)
@@ -229,6 +229,11 @@ pws_noboundaries2 <- anti_join(pws_noboundaries,pws_placeboundaries,by=c("CITY_S
 pws_noboundaries2 <- left_join(states,pws_noboundaries2,by="ST_uri")
 pws_noboundaries2$CITY_SERVED_uri <- NA
 
+pws_boundaries$uri <- paste0("https://geoconnex.us/ref/pws/",pws_boundaries$PWSID)
+pws_boundaries$uri.x <- NULL
+pws_boundaries$uri.y <- NULL
+
+
 pws_boundaries<- select(pws_boundaries,PWSID,NAME,BOUNDARY_TYPE,CITY_SERVED,CITY_SERVED_uri,ST,ST_uri,SDWIS,PROVIDER,POPULATION_SERVED_COUNT,SYSTEM_SIZE,uri)
 pws_placeboundaries <- select(pws_placeboundaries,PWSID,NAME,BOUNDARY_TYPE,CITY_SERVED,CITY_SERVED_uri,ST,ST_uri,SDWIS,PROVIDER,POPULATION_SERVED_COUNT,SYSTEM_SIZE,uri)
 pws_noboundaries2 <- select(pws_noboundaries2,PWSID,NAME,BOUNDARY_TYPE,CITY_SERVED,CITY_SERVED_uri,ST,ST_uri,SDWIS,PROVIDER,POPULATION_SERVED_COUNT,SYSTEM_SIZE,uri)
@@ -240,12 +245,9 @@ pws_noboundaries2$BOUNDARY_TYPE <- "Unknown Service Area - Centroid of State U.S
 st_write(pws_placeboundaries,dsn="data/pws_placeboundaries.gpkg")
 
 pwpb<-st_read("data/pws_placeboundaries.gpkg")
-#names(pwpb)<-names(pws_boundaries)
+pwpb <- pwpb %>% rename(geometry = geom)
 st_geometry(pwpb)<-"geometry"
 
-pws_boundaries$uri <- paste0("https://geoconnex.us/ref/pws/",pws_boundaries$PWSID)
-pws_boundaries$uri.x <- NULL
-pws_boundaries$uri.y <- NULL
 
 
 
@@ -277,8 +279,11 @@ PWS$uri <- paste0(root,PWS$PWSID)
 
 
 st_write(PWS2,dsn="out/pws.gpkg")
-write_csv(pids,"out/pws.csv")
 
+pws <- st_read("out/pws.gpkg")
+pws$PROVIDER[which(pws$ST=="NM" & pws$BOUNDARY_TYPE=="Water Service Area - As specified in PROVIDER ")] <- "https://catalog.newmexicowaterdata.org/ne/dataset/public-water-supply-areas"
+write_csv(pids,"out/pws.csv")
+st_write(pws,dsn="out/pws.gpkg")
 
 batch_size=1000
 
