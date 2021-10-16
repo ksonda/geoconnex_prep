@@ -11,8 +11,8 @@ server:
     pretty_print: true
     limit: 50
     map:
-        url: https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png
-        attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia maps</a> | Map data &copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+        url: https://tile.openstreetmap.org/{z}/{x}/{y}.png
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
 #    ogc_schemas_location: /opt/schemas.opengis.net
 
 logging:
@@ -21,8 +21,8 @@ logging:
 
 metadata:
     identification:
-        title: geoconnex reference features
-        description: Provides reference features for geoconnex.us.
+        title: WaDE geoconnex features
+        description: Provides reference features for WaDE for geoconnex.us.
         keywords:
             - geospatial
             - data
@@ -72,8 +72,8 @@ resources:
                begin: null
                end: null
        provider:
-           name: GeoJSON
+           name: SQLiteGPKG
            data: /ext_data/wade_sites.gpkg
            id_field: id
            uri_field: uri
-           table: wade+sites
+           table: wade_sites
