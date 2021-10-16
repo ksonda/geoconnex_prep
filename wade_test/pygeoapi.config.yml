@@ -55,9 +55,7 @@ resources:
            - Water Rights
            - Points of Diversion
        context:
-           - id: https://schema.org/name
            - LINK: https://schema.org/subjectOf
-           - uri: "@id"
        links:
            - type: application/html
              rel: canonical
