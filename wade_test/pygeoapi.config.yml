@@ -23,15 +23,15 @@ logging:
 
 metadata:
     identification:
-        title: geoconnex reference features
-        description: Provides reference features for geoconnex.us.
+        title: WaDE geoconnex reference features
+        description: Provides reference features WaDE for geoconnex.us.
         keywords:
             - geospatial
             - data
             - api
         keywords_type: theme
         terms_of_service: https://creativecommons.org/licenses/by/4.0/
-        url: https://github.com/internetofwater/geoconnex.us
+        url: https://github.com/ksonda/geoconnex_prep/tree/master/wade_test
     license:
         name: CC-BY 4.0 license
         url: https://creativecommons.org/licenses/by/4.0/
@@ -49,13 +49,12 @@ metadata:
         role: pointOfContact
 
 resources:
-    hu02:
+    wade:
         type: collection
-        title: HU02
-        geojsonld: false
+        title: WaDE Sites
         description: Wade
         keywords:
-            - Hydrologic Regions
+            - points of diversion
         context:
             - schema: https://schema.org/
               LINK: 
