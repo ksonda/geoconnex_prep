@@ -1,7 +1,8 @@
 State,Boundary_Link,DrinkingWaterWatch_Link
 AK,,
 AL,,
-AR,,
+AR,https://gis.arkansas.gov/arcgis/rest/services/FEATURESERVICES/Utilities/FeatureServer/
+,
 AZ,https://opendata.arcgis.com/datasets/a27a81894e6b4897a33daf2003bc58b9_0.zip,
 CA,https://opendata.arcgis.com/datasets/fbba842bf134497c9d611ad506ec48cc_0.zip,
 CO,,
