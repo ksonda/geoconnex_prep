@@ -27,9 +27,9 @@ d <- read_csv("data/SDWA_PUB_WATER_SYSTEMS.csv.zip")%>%
 
 pids <- d%>%
           mutate(id=paste0(root,PWSID),
-                 target=paste0("https://info.geoconnex.us/collections/pws/items/",
+                 target=paste0("https://reference.geoconnex.us/collections/pws/items/",
                               PWSID),
-                 creator="kyle.onda@duke.edu",
+                 creator="konda@lincolninst.edu",
                  description="Public Water Systems",
                  c1_type="QueryString",
                  c1_match="f=.*",
@@ -50,7 +50,7 @@ pws_sf_strip<-function(sf){
 #download.file(ca_shp, "data/ca.zip")
 #unzip("data/ca.zip",exdir="data/ca_shp")
 ca <- st_read("data/ca_shp/DDW_SABL_dev.shp")
-ca <- ca %>% select(PWSID,NAME)
+ca <- ca %>% st_transform(4326) %>% select(PWSID,NAME)
 ca$PROVIDER = "https://gis.data.ca.gov/datasets/waterboards::california-drinking-water-system-area-boundaries"
 ca$url = ""
 ca$ST="CA"
@@ -84,7 +84,7 @@ pa<-pws_sf_strip(pa)
 ## NJ
 #download.file("https://opendata.arcgis.com/datasets/00e7ff046ddb4302abe7b49b2ddee07e_13.zip","data/nj.zip")
 #unzip("data/nj.zip",exdir="data/nj_shp")
-nj <- st_read("data/nj_shp/Purveyor_Service_Areas_of_New_Jersey.shp")
+nj <- st_read("data/nj_shp/Purveyor_Service_Areas_of_New_Jersey.shp") %>% st_transform(4326)
 nj$PROVIDER = "https://njogis-newjersey.opendata.arcgis.com/datasets/00e7ff046ddb4302abe7b49b2ddee07e_13"
 nj$PWSID = nj$PWID
 nj$url = nj$AGENCY_URL
@@ -106,9 +106,9 @@ tx<-pws_sf_strip(tx)
 nc2<-st_read("nc.geojson")
 
 ##UT
-#download.file("https://opendata.arcgis.com/datasets/dc62a286013f447e88fc45480077c944_0.zip", "data/ut.zip")
-#unzip("data/ut.zip",exdir="data/ut_shp")
-ut <- st_read("data/ut_shp/CulinaryWaterServiceAreas.shp")
+download.file("https://opendata.arcgis.com/datasets/dc62a286013f447e88fc45480077c944_0.zip", "data/ut.zip")
+unzip("data/ut.zip",exdir="data/ut_shp")
+ut <- st_read("data/ut_shp/MnI_current.shp")
 ut <- st_transform(ut, 4326)
 ut$PWSID = ut$DWSYSNUM
 ut$NAME = ut$WRNAME
@@ -118,9 +118,8 @@ ut$ST="UT"
 ut<-pws_sf_strip(ut)
 
 ##AZ
-#download.file("https://opendata.arcgis.com/datasets/a27a81894e6b4897a33daf2003bc58b9_0.zip","data/az.zip")
-#unzip("data/az.zip",exdir="data/az_shp")
-az <- st_read("data/az_shp/CWS_ServiceArea.shp")
+
+az <- st_read("https:/opendata.arcgis.com/api/v3/datasets/9992e59e46bb466584f9694f897f350a_0/downloads/data?format=geojson&spatialRefId=4326")
 az <- st_transform(az, 4326)
 az$PWSID <- az$ADEQ_ID
 az$NAME <- az$CWS_NAME
@@ -141,8 +140,8 @@ nm$ST="NM"
 nm <- pws_sf_strip(nm)
 
 
-
-boundaries<-rbind(ca,nc2,nj,pa,tx,ut,az,nm)
+nc2 <- nc %>% rename(geometry = geom)
+boundaries<-bind_rows(ca,nc,nj,pa,tx,ut,az,nm)
 ## Assign state polygon if no boundary
 d$SOURCE_WATER[which(d$SOURCE_WATER=="GW")]<-"Ground water"
 d$SOURCE_WATER[which(d$SOURCE_WATER=="SW")]<-"Surface water"
@@ -162,7 +161,7 @@ states$ST_uri = states$uri
 states<-select(states,ST_uri,STUSPS)
 st_write(states,dsn="states.geojson",append=FALSE)
 states<-st_read("states.geojson")
-st_geometry(states)<-st_geometry(st_centroid(states))
+# st_geometry(states)<-st_geometry(st_centroid(states))
 states<-distinct(states,.keep_all=TRUE)
 #states$geometry<-states$geom
 st_uri<-states
@@ -240,7 +239,7 @@ pws_noboundaries2 <- select(pws_noboundaries2,PWSID,NAME,BOUNDARY_TYPE,CITY_SERV
 
 pws_boundaries$BOUNDARY_TYPE <- "Water Service Area - As specified in PROVIDER"
 pws_placeboundaries$BOUNDARY_TYPE <- "Unknown Service Area - Using City Served Boundary (U.S. Census Places Cartogrpahic Boundary Polygon) to Represent PWS"
-pws_noboundaries2$BOUNDARY_TYPE <- "Unknown Service Area - Centroid of State U.S. Census Cartographic Boundary Polygon to Represent PWS"
+pws_noboundaries2$BOUNDARY_TYPE <- "Unknown Service Area - Boundary of State U.S. Census Cartographic Boundary Polygon to Represent PWS"
 
 st_write(pws_placeboundaries,dsn="data/pws_placeboundaries.gpkg")
 
@@ -283,8 +282,10 @@ st_write(PWS2,dsn="out/pws.gpkg")
 pws <- st_read("out/pws.gpkg")
 pws$PROVIDER[which(pws$ST=="NM" & pws$BOUNDARY_TYPE=="Water Service Area - As specified in PROVIDER ")] <- "https://catalog.newmexicowaterdata.org/en/dataset/public-water-supply-areas"
 write_csv(pids,"out/pws.csv")
-st_write(pws,dsn="out/pws.gpkg")
+st_write(pws,dsn="out/pws.gpkg",delete_dsn=TRUE)
 
+pws3 <- pws %>% filter(!st_is_empty(.)) %>% filter(!is.na(PWSID))
+st_write(pws3,dsn="out/pws.gpkg",delete_dsn=TRUE)
 batch_size=1000
 
 ####   ####
